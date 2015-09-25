@@ -9,31 +9,33 @@
   "author": "",
   "dependencies": {
     "async": "0.2.10",
-    "lodash": "2.4.1",
-    "hoodie-server": "0.9.19",
-    "hoodie": "0.6.5"
+    "hoodie": "latest",
+    "hoodie-server": "^3.0.0",
+    "lodash": "2.4.1"
   },
   "devDependencies": {
-    "grunt": "0.4.1",
+    "chai": "^1.9.1",
     "expect.js": "0.2.0",
-    "grunt-simple-mocha": "0.4.0",
+    "grunt": "0.4.1",
+    "grunt-continue": "0.0.1",
     "grunt-contrib-jshint": "0.8.0",
     "grunt-contrib-watch": "0.5.1",
+    "grunt-env": "^0.4.1",
+    "grunt-hoodie": "^0.3.0",
+    "grunt-mocha-browser": "0.0.4",
     "grunt-shell": "0.6.4",
-    "sinon": "1.8.2",
+    "grunt-simple-mocha": "0.4.0",
+    "hoodie-plugin-users": "^2.2.1",
+    "mocha": "1.17.1",
+    "phantomjs": "^1.9.18",
     "request": "2.34.0",
     "shelljs": "0.2.6",
-    "mocha": "1.17.1",
-    "grunt-hoodie": "^0.3.0",
-    "grunt-continue": "0.0.1",
-    "grunt-env": "^0.4.1",
-    "grunt-mocha-browser": "0.0.4",
-    "chai": "^1.9.1",
-    "hoodie-plugin-users": "^0.1.0"
+    "sinon": "1.8.2"
   },
   "hoodie": {
     "plugins": [
-      "hoodie-plugin-users"
+      "hoodie-plugin-users",
+      "hoodie-plugin-global-share"
     ]
   }
 }

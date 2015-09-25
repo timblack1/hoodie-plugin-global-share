@@ -70,8 +70,11 @@ module.exports = function (grunt) {
         tasks: 'jshint'
       },
       unittest: {
-        files: 'worker.js',
-        tasks: 'test:unit'
+        files: [
+          'worker.js', 'hoodie.global-share.js',
+          'test/browser/test-example.js', 'test/unit/test-example.js'
+        ],
+        tasks: ['test:unit', 'test:browser']
       }
     }
 
