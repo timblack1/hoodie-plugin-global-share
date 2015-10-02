@@ -4,7 +4,20 @@
   "main": "worker.js",
   "description": "Hoodie.js Global Share Plugin",
   "scripts": {
-    "test": "grunt test"
+    "test": "npm run lint && npm run test:unit && npm run test:browser",
+    "lint": "./node_modules/.bin/jshint Gruntfile.js hoodie.global-share.js worker.js",
+    "test:unit": "./node_modules/.bin/mocha test/unit/*.js",
+    "test:browser": "npm run rmData && npm run npmLink && npm run install_plugin && npm run hoodie_start && ./node_modules/mocha-phantomjs/bin/mocha-phantomjs --remote-debugger-port=9000 --remote-debugger-autorun=true http://localhost:6045 && killall hoodie && npm run npmUnlink && npm run remove_plugin",
+    "test:browser2": "npm run rmData && npm run npmLink && npm run install_plugin && npm run hoodie_start2",
+    "test:phantom": "./node_modules/mocha-phantomjs/bin/mocha-phantomjs --remote-debugger-port=9000 --remote-debugger-autorun=true http://localhost:6045",
+    "test:shutdown": "killall hoodie && npm run npmUnlink && npm run remove_plugin",
+    "hoodie_start": "export HOODIE_SETUP_PASSWORD=testing; node_modules/hoodie-server/bin/start --www test/browser",
+    "hoodie_start2": "export HOODIE_SETUP_PASSWORD=testing;  hoodie start --www test/browser",
+    "install_plugin": "hoodie install global-share",
+    "remove_plugin": "hoodie uninstall global-share",
+    "npmLink": "npm link && npm link hoodie-plugin-global-share",
+    "npmUnlink": "npm unlink && npm unlink hoodie-plugin-global-share",
+    "rmData": "rm -rf data"
   },
   "author": "",
   "dependencies": {
@@ -14,8 +27,8 @@
     "lodash": "2.4.1"
   },
   "devDependencies": {
-    "chai": "^1.9.1",
-    "expect.js": "0.2.0",
+    "chai": "^3.3.0",
+    "expect.js": "^0.3.1",
     "grunt": "0.4.1",
     "grunt-continue": "0.0.1",
     "grunt-contrib-jshint": "0.8.0",
@@ -26,11 +39,12 @@
     "grunt-shell": "0.6.4",
     "grunt-simple-mocha": "0.4.0",
     "hoodie-plugin-users": "^2.2.1",
-    "mocha": "1.17.1",
-    "phantomjs": "^1.9.18",
+    "jshint": "^2.8.0",
+    "mocha": "^2.3.3",
+    "mocha-phantomjs": "^4.0.1",
     "request": "2.34.0",
     "shelljs": "0.2.6",
-    "sinon": "1.8.2"
+    "sinon": "^1.17.1"
   },
   "hoodie": {
     "plugins": [

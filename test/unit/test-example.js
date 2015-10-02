@@ -1,4 +1,7 @@
 var assert = require('chai').assert;
+var mocha = require('mocha');
+var suite = mocha.suite;
+var test = mocha.test;
 
 suite('example', function () {
 
