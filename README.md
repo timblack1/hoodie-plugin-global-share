@@ -82,7 +82,7 @@ creates a new database `hoodie-plugin-global-share` that all objects from all
 user databases that are marked as public are replicated to. 
 
 Calling `.publish()` on a store method in the frontend adds a `$public: true`
-flag to the respecitve objects, that is used by the filtered replications from
+flag to the respective objects, that is used by the filtered replications from
 user databases → `hoodie-plugin-global-share` database.
 
 Calling `.unpublish()` uses the `hoodie.task` API internally to start `globalshareunpublish`
