@@ -142,117 +142,54 @@ suite('Browser API', function () {
       });
   });
 
-//   test('publish two docs, then find them using .findAll(type)', function (done) {
-//     this.timeout(10000);
-//     var type = 'testfindall';
-//     var task = hoodie.account.signUp('testuser5', 'testing')
-//     .then(function () {
-//       return hoodie.store.add(type, {title: 'foo'}).publish()
-//       .then(function(){
-//         return hoodie.store.add(type, {title: 'foo2'}).publish()
-//         .then(function(){
-//           // wait a bit to make sure the data has synced from the server
-//           setTimeout(function () {
-//             hoodie.global.findAll(type)
-//             .fail(function (err) {
-//               console.log('fail 1');
-//               assert.ok(false, err.message);
-//               done();
-//             })
-//             // TODO: Start here.  The assert fails, then the test times out here.
-//             //  Both docs replicate, but they aren't visible here, I'm guessing due to a timing issue.
-//             .then(function (docs) {
-//               console.log('assert 1');
-//               debugger;
-//               assert.equal(docs.length, 2);
-//             })
-//             .then(function(){
-//               return hoodie.account.signOut();
-//             })
-//             .then(function () {
-//               // wait a bit to make sure the data has synced from the server
-//               setTimeout(function () {
-//                 hoodie.global.findAll(type)
-//                 .fail(function (err) {
-//                   console.log('fail 2');
-//                   assert.ok(false, err.message);
-//                   done();
-//                 })
-//                 .done(function (docs) {
-//                   console.log('assert 2');
-//                   assert.equal(docs.length, 2);
-//                   done();
-//                 });
-//               }, 2000);
-//             })
-//           }, 4000);          
-//         })
-//         .fail(function(err){
-//           console.log(err);
-//           assert.ok(false, err.message);
-//           done();
-//         });
-//       })
-//       .fail(function(err){
-//         console.log(err);
-//         assert.ok(false, err.message);
-//         done();
-//       });
-//     })
-//     .fail(function (err) {
-//       console.log('fail 3');
-//       assert.ok(false, err.message);
-//       done();
-//     });
-//   });
-
   test('publish two docs, then find them using .findAll(type)', function (done) {
     this.timeout(10000);
     var type = 'testfindall';
+    // Set up change listener on global store
+    hoodie.global.on(type + ':change', function(){
+      hoodie.global.findAll(type)
+      .then(function(docs){
+        if (docs.length === 2){
+          assert.equal(docs.length, 2);
+          done();
+        }
+      });
+    });
+    // Add docs to user's store
     var task = hoodie.account.signUp('testuser5', 'testing')
     .then(function(){
-      // TODO: Why doesn't $publish get set on this one?
-      return hoodie.store.add(type, {title: 'foo'}).publish();
-    })
-    .then(function(){
-      return hoodie.store.add(type, {title: 'foo2'}).publish();
-    })
-    .then(function(){
-      // wait a bit to make sure the data has synced from the server
-      setTimeout(function () {
-        hoodie.global.findAll(type)
-        // TODO: Start here.  The assert fails, then the test times out here.
-        //  (Sometimes?) Both docs replicate, but they aren't visible here, I'm guessing due to a timing issue.
-        .then(function (docs) {
-          console.log('assert 1');
-          debugger;
-          assert.equal(docs.length, 2);
-        })
-        .then(function(){
-          return hoodie.account.signOut();
-        })
-        .then(function () {
-          // wait a bit to make sure the data has synced from the server
-          setTimeout(function () {
-            hoodie.global.findAll(type)
-            .fail(function (err) {
-              console.log('fail 2');
-              assert.ok(false, err.message);
-              done();
-            })
-            .done(function (docs) {
-              console.log('assert 2');
-              assert.equal(docs.length, 2);
-              done();
-            });
-          }, 2000);
-        })
-      }, 4000);          
-    })
+      // TODO: Why do we have to use setTimeout in order to get .publish() to work on both docs?
+      //  If we don't do this, then .publish() only publishes the second doc - but why?
+      setTimeout(function(){ return hoodie.store.add(type, {title: 'foo'}).publish(); }, 2000);
+      setTimeout(function(){ return hoodie.store.add(type, {title: 'foo2'}).publish(); }, 2000);
+    });
   });
 
   test('publish two docs, then find them using .findAll(function(){}) syntax', function (done) {
-    done();
+    this.timeout(10000);
+    var type = 'testfindall-function';
+    // Set up change listener on global store
+    hoodie.global.on(type + ':change', function(){
+      hoodie.global.findAll(function(doc){
+        if (doc.type === type){
+          return true;
+        }
+      })
+      .then(function(docs){
+        if (docs.length === 2){
+          assert.equal(docs.length, 2);
+          done();
+        }
+      });
+    });
+    // Add docs to user's store
+    var task = hoodie.account.signUp('testuser6', 'testing')
+    .then(function(){
+      // TODO: Why do we have to use setTimeout in order to get .publish() to work on both docs?
+      //  If we don't do this, then .publish() only publishes the second doc - but why?
+      setTimeout(function(){ return hoodie.store.add(type, {title: 'foo'}).publish(); }, 2000);
+      setTimeout(function(){ return hoodie.store.add(type, {title: 'foo2'}).publish(); }, 2000);
+    });
   });
 
 });
